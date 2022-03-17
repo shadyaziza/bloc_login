@@ -1,15 +1,15 @@
-import 'package:flutter/foundation.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_login/logic/blocs/auth/bloc/auth_bloc.dart';
 import 'package:bloc_login/logic/blocs/auth/bloc/auth_state.dart';
 import 'package:bloc_login/presentation/router/app_routes.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'data/repositories/authentication_repository/authentication_repository.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final storage = await HydratedStorage.build(
     storageDirectory: kIsWeb

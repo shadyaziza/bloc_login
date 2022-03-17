@@ -11,3 +11,8 @@ const Color profile_info_general = Color(0xFFFFC85B);
 const Color profile_info_notification = Color(0xFF5DD1D3);
 const Color profile_item_color = Color(0xFFC4C5C9);
 const String imagePath = 'assets/image';
+
+/// [Key]s for testing
+
+const kKeyWelcomeScreenLoginButton = Key('kWelcomeScreenLoginButton');
+const kKeyWelcomeScreenRegisterButton = Key('kWelcomeScreenRegisterButton');

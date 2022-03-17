@@ -16,3 +16,9 @@ const String imagePath = 'assets/image';
 
 const kKeyWelcomeScreenLoginButton = Key('kWelcomeScreenLoginButton');
 const kKeyWelcomeScreenRegisterButton = Key('kWelcomeScreenRegisterButton');
+const kKeyRegisterPublicEmailField = Key('kRegisterPublicEmailField');
+const kKeyRegisterPublicPasswordField = Key('kRegisterPasswordField');
+const kKeyRegisterPublicConfirmPasswordField =
+    Key('kRegisterConfirmPasswordField');
+const kKeyRegisterPublicRegisterButton = Key('kRegisterPublicRegisterButtotn');
+const kKeyRegisterPublicLoginButton = Key('kRegisterPublicLoginButton');

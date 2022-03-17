@@ -14,8 +14,25 @@ void main() {
       /// make sure the app is settled
       await tester.pumpAndSettle();
 
+      /// test the login button
       expect(find.byKey(kKeyWelcomeScreenLoginButton), findsOneWidget);
+
+      /// test the register button
       expect(find.byKey(kKeyWelcomeScreenRegisterButton), findsOneWidget);
+
+      /// click the register button
+      await tester.tap(find.byKey(kKeyWelcomeScreenRegisterButton));
+
+      /// make sure the app is settled
+      await tester.pumpAndSettle();
+
+      /// test the register screen
+      expect(find.byKey(kKeyRegisterPublicEmailField), findsOneWidget);
+      expect(find.byKey(kKeyRegisterPublicPasswordField), findsOneWidget);
+      expect(
+          find.byKey(kKeyRegisterPublicConfirmPasswordField), findsOneWidget);
+      expect(find.byKey(kKeyRegisterPublicRegisterButton), findsOneWidget);
+      expect(find.byKey(kKeyRegisterPublicLoginButton), findsOneWidget);
     });
   });
 }

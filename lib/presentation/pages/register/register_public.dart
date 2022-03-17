@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../data/constants/constant.dart';
+
 class RegisterPublic extends StatefulWidget {
   const RegisterPublic({Key key}) : super(key: key);
 
@@ -78,6 +80,7 @@ class _RegisterPublicState extends State<RegisterPublic> {
                               padding:
                                   const EdgeInsets.only(left: 20.0, right: 40),
                               child: TextFormField(
+                                key: kKeyRegisterPublicEmailField,
                                 style: const TextStyle(
                                     color: Colors.white, fontFamily: 'UniNeue'),
                                 validator: (val) {},
@@ -110,6 +113,7 @@ class _RegisterPublicState extends State<RegisterPublic> {
                               padding: const EdgeInsets.only(
                                   top: 40, left: 20.0, right: 40),
                               child: TextFormField(
+                                key: kKeyRegisterPublicPasswordField,
                                 style: const TextStyle(
                                     color: Colors.white, fontFamily: 'UniNeue'),
                                 validator: (val) {},
@@ -153,6 +157,7 @@ class _RegisterPublicState extends State<RegisterPublic> {
                               padding: const EdgeInsets.only(
                                   top: 40, left: 20.0, right: 40),
                               child: TextFormField(
+                                key: kKeyRegisterPublicConfirmPasswordField,
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'UniNeue',
@@ -198,6 +203,7 @@ class _RegisterPublicState extends State<RegisterPublic> {
                               padding: const EdgeInsets.only(
                                   top: 50, left: 40.0, right: 40),
                               child: ElevatedButton(
+                                  key: kKeyRegisterPublicRegisterButton,
                                   style: ElevatedButton.styleFrom(
                                     minimumSize:
                                         Size(width * 0.65, height * 0.12),
@@ -238,6 +244,7 @@ class _RegisterPublicState extends State<RegisterPublic> {
                                   width: 10,
                                 ),
                                 GestureDetector(
+                                  key: kKeyRegisterPublicLoginButton,
                                   onTap: () {
                                     Navigator.of(context).pushNamed("/login");
                                   },

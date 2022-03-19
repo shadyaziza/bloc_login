@@ -19,8 +19,8 @@ class AuthLoading extends AuthState {
 }
 
 class AuthGranted extends AuthState {
-  final String token;
-  final User user;
+  final String? token;
+  final User? user;
   AuthGranted(this.token, this.user): super([token, user]);
 
   Map<String, dynamic> toMap() {
@@ -42,7 +42,7 @@ class AuthGranted extends AuthState {
   factory AuthGranted.fromJson(String source) => AuthGranted.fromMap(json.decode(source));
 
   @override
-  List<Object> get props => [token, user];
+  List<Object?> get props => [token, user];
 }
 
 class AuthDenied extends AuthState {

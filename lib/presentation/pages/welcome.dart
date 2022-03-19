@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

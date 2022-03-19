@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class HeaderLight extends StatelessWidget {
   final Widget child;
-  const HeaderLight({Key key,
-    @required this.child,
+  const HeaderLight({Key? key,
+    required this.child,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {

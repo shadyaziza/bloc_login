@@ -25,10 +25,10 @@ Future<void> main() async {
 }
 
 class App extends StatelessWidget {
-  final AuthenticationRepository authenticationRepository;
+  final AuthenticationRepository? authenticationRepository;
 
   const App({
-    Key key,
+    Key? key,
     this.authenticationRepository,
   }) : super(key: key);
 
@@ -50,12 +50,12 @@ class App extends StatelessWidget {
 }
 
 class BlocApp extends StatelessWidget {
-  BlocApp({Key key}) : super(key: key);
+  BlocApp({Key? key}) : super(key: key);
 
   final AppRouter _appRouter = AppRouter();
   final _navigatorKey = GlobalKey<NavigatorState>();
 
-  NavigatorState get _navigator => _navigatorKey.currentState;
+  NavigatorState? get _navigator => _navigatorKey.currentState;
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +81,9 @@ class BlocApp extends StatelessWidget {
             return BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthGranted) {
-                  _navigator.pushNamedAndRemoveUntil("/home", (route) => false);
+                  _navigator!.pushNamedAndRemoveUntil("/home", (route) => false);
                 } else if (state is AuthInitial) {
-                  _navigator.pushNamedAndRemoveUntil("/", (route) => false);
+                  _navigator!.pushNamedAndRemoveUntil("/", (route) => false);
                 }
               },
               child: child,

@@ -5,7 +5,7 @@ class ProfileImage extends StatelessWidget {
   final Color color;
   final String image;
   const ProfileImage(
-      {Key key, @required this. image, this.height = 100.0, this.width = 100.0, this.color = Colors.white,}) : super(key: key);
+      {Key? key, required this. image, this.height = 100.0, this.width = 100.0, this.color = Colors.white,}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -14,9 +14,9 @@ String userToJson(User data) {
 }
 
 class User extends Equatable {
-  final int id;
-  final Company company;
-  final String firstName,
+  final int? id;
+  final Company? company;
+  final String? firstName,
       lastName,
       addressline_1,
       gender,
@@ -96,7 +96,7 @@ class User extends Equatable {
       };
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         id,
         company != null,
         firstName,

@@ -19,9 +19,9 @@ class AuthenticationRepository {
   }
 
   Future<Response> logIn(
-      {String username, String password, String device}) async {
-    return await _httpProvider.auth(
-        username: username, password: password, device: device);
+      {String? username, String? password, String? device}) async {
+    return await (_httpProvider.auth(
+        username: username, password: password, device: device) as FutureOr<Response<dynamic>>);
   }
 
   logOut(String token) async {

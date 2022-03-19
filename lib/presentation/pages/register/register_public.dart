@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/constants/constant.dart';
 
 class RegisterPublic extends StatefulWidget {
-  const RegisterPublic({Key key}) : super(key: key);
+  const RegisterPublic({Key? key}) : super(key: key);
 
   @override
   _RegisterPublicState createState() => _RegisterPublicState();

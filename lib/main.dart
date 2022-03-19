@@ -6,11 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/repositories/authentication_repository/authentication_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final user = prefs.getString('currentUser');
+  print({'main': user});
   final storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
         ? HydratedStorage.webStorageDirectory
@@ -18,6 +22,7 @@ Future<void> main() async {
   );
   HydratedBlocOverrides.runZoned(
     () => runApp(App(
+      prefs: prefs,
       authenticationRepository: AuthenticationRepository(),
     )),
     storage: storage,
@@ -26,9 +31,10 @@ Future<void> main() async {
 
 class App extends StatelessWidget {
   final AuthenticationRepository? authenticationRepository;
-
+  final SharedPreferences prefs;
   const App({
     Key? key,
+    required this.prefs,
     this.authenticationRepository,
   }) : super(key: key);
 
@@ -40,7 +46,8 @@ class App extends StatelessWidget {
       child: BlocProvider(
         create: (context) {
           return AuthBloc(
-            authenticationRepository: authenticationRepository,
+            prefs: prefs,
+            authenticationRepository: authenticationRepository!,
           )..add(AuthInit());
         },
         child: BlocApp(),
@@ -80,8 +87,9 @@ class BlocApp extends StatelessWidget {
           builder: (context, state) {
             return BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
-                if (state is AuthGranted) {
-                  _navigator!.pushNamedAndRemoveUntil("/home", (route) => false);
+                if (state is AuthGranted && !state.taskUser.expired) {
+                  _navigator!
+                      .pushNamedAndRemoveUntil("/home", (route) => false);
                 } else if (state is AuthInitial) {
                   _navigator!.pushNamedAndRemoveUntil("/", (route) => false);
                 }

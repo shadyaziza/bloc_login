@@ -1,172 +1,119 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:bloc_login/data/models/http.response.dart';
-import 'package:bloc_login/data/models/http/login_response.dart';
+
+import 'package:bloc_login/data/models/task_user.dart';
 import 'package:bloc_login/data/models/user_model.dart';
 import 'package:bloc_login/data/repositories/authentication_repository/authentication_repository.dart';
+import 'package:equatable/equatable.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth_state.dart';
+
 part 'auth_event.dart';
 
-class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
-  AuthBloc({AuthenticationRepository? authenticationRepository}) : _authenticationRepository = authenticationRepository, super(AuthInitial()) {
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  AuthBloc(
+      {required AuthenticationRepository authenticationRepository,
+      required SharedPreferences prefs})
+      : _authenticationRepository = authenticationRepository,
+        _prefs = prefs,
+        super(AuthInitial()) {
+    stream.listen((state) {
+      print({'AuthBloc': state});
+    });
     // handle auth init
     on<AuthInit>(_onAuthenticationInit);
     on<AuthLogoutRequested>(_onAuthenticationLogoutRequested);
     on<AuthLoginRequested>(_onAuthenticationLoginRequested);
-    on<AuthRefreshRequested>(_onAuthenticationLoginRefresh);
-    on<Authenticated>(_onAuthenticated);
+    on<AuthRegisterRequested>(_onAuthRegisterRequested);
+    on<ResetPasswordRequested>(_onResetPasswordRequested);
   }
-  
+
   final AuthenticationRepository? _authenticationRepository;
+  final SharedPreferences _prefs;
 
-  Future<FutureOr<void>> _onAuthenticationInit(AuthInit event, Emitter<AuthState> emit) async {
-    // check if current state is AuthGranted
-    // if AuthGranted -> preserve state
-    // else emit AuthInitial state
-    emit(state is AuthGranted ?  state : AuthInitial());
+  Future<FutureOr<void>> _onAuthenticationInit(
+      AuthInit event, Emitter<AuthState> emit) async {
+    final currentUser = _prefs.getString('currentUser');
+    if (currentUser != null) {
+      final user = TaskUser.fromJson(currentUser);
+      if (user.expired) {
+        emit(AuthInitial());
+      } else {
+        emit(AuthGranted(taskUser: user));
+      }
+    } else {
+      emit(AuthInitial());
+    }
   }
 
-  Future<FutureOr<void>> _onAuthenticationLogoutRequested(AuthLogoutRequested event, Emitter<AuthState> emit) async {
+  Future<FutureOr<void>> _onAuthenticationLogoutRequested(
+      AuthLogoutRequested event, Emitter<AuthState> emit) async {
+    final taskUser = (state as AuthGranted).taskUser.copyWith(expired: true);
     emit(AuthLoading());
-
-    await _authenticationRepository!.logOut(event.token);
+    _prefs.setString('currentUser', taskUser.toJson());
 
     emit(AuthInitial());
   }
 
-  Future<FutureOr<void>> _onAuthenticationLoginRequested(AuthLoginRequested event, Emitter<AuthState> emit) async {
-    try{
-      emit(AuthLoading());
-      Response parsed = await _authenticationRepository!.logIn(
-          username: event.email, password: event.password, device: event.device);
-          
-      HttpResponse response =
-      HttpResponse.fromJson(parsed.data, parsed.statusCode);
-      if (response.status == 200) {
-        LoginResponse loginResponse = LoginResponse.fromJson(response.data);
-        emit(AuthGranted(loginResponse.token, loginResponse.user));
-      }else{
-        emit(const AuthDenied(["Login failed"]));
+  Future<FutureOr<void>> _onAuthenticationLoginRequested(
+      AuthLoginRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    final result = _prefs.getString('currentUser');
+    if (result != null) {
+      final stored = TaskUser.fromJson(result);
+      if (stored.email == event.email && stored.password == event.password) {
+        final _currentUser = stored.copyWith(expired: false);
+        await _prefs.setString('currentUser', _currentUser.toJson());
+        emit(AuthGranted(taskUser: _currentUser));
+      } else {
+        emit(const AuthDenied(['Invalid credentials']));
       }
-    }on SocketException catch (_) {
-      
-    } on FormatException catch (_) {
-      
-    } on DioError catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      Response? res = e.response;
-      if(res == null){
-        if (kDebugMode) {
-          print(e.type);
-        }
-        
-      }else{
-        HttpResponse response = HttpResponse.fromJson(res.data, res.statusCode);
-        switch (e.type) {
-          case DioErrorType.response:
-            if (res.statusCode == 500) {
-              emit(const AuthDenied(["System error"]));
-            }
-
-            else if(res.statusCode == 403){
-              emit(const AuthDenied(["Some Error"]));
-            }
-
-            else if(res.statusCode == 404){
-              print(res.data);
-              emit(const AuthDenied(["Not Found"]));
-            }
-
-            
-            else if(res.statusCode == 401){
-              emit(const AuthDenied(["Invalid login credentials"]));
-              
-            }
-
-            else if (res.statusCode == 422) {
-              if(response.data['error']['message']['email'] != null){
-                emit(const AuthDenied(["Unknown error"]));
-                    // message: response.data['error']['message']['email'][0]));
-              }
-              if(response.data['error']['message']['password'] != null){
-                emit(const AuthDenied(["Unknown error"]));
-                    // message: response.data['error']['message']['password'][0]));
-              }
-              if(response.data['error']['message']['device_name'] != null){
-                emit(const AuthDenied(["Unknown error"]));
-                    // message: response.data['error']['message']['device_name'][0]));
-              }
-            } else {
-              emit(const AuthDenied(["Unknown error"]));
-                  // message: response.data['error']['message']));
-              
-            }
-
-            break;
-          case DioErrorType.sendTimeout:
-            emit(const AuthDenied(["Unknown error"]));
-                // message: 'Timed out. Please check your connection'));
-            break;
-          case DioErrorType.cancel:
-            emit(const AuthDenied(["Unknown error"]));
-                // message: 'Request cancelled'));
-            break;
-
-          case DioErrorType.other:
-            break;
-          case DioErrorType.connectTimeout:
-            emit(const AuthDenied(["Unknown error"]));
-                // message: 'Connection timed out. Please check your data connection'));
-            break;
-
-          case DioErrorType.receiveTimeout:
-            emit(const AuthDenied(["Timed out. Please try again later"]));
-                // message: ''));
-            break;
-
-          default:
-            
-            break;
-        }
-      }
-      } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      emit(const AuthDenied(["Unknown error"]));
-    }
-  }
-  
-  FutureOr<void> _onAuthenticated(Authenticated event, Emitter<AuthState> emit) {
-    emit(AuthGranted(event.token, event.user));
-  }
-
-  Future<FutureOr<void>> _onAuthenticationLoginRefresh(AuthRefreshRequested event, Emitter<AuthState> emit) async {
-    
-  }
-
-  @override
-  AuthState fromJson(Map<String, dynamic> json) {
-    try {
-      return AuthGranted.fromMap(json);
-    } catch (_) {
-      return AuthInitial();
+    } else {
+      emit(const AuthDenied(['No User']));
     }
   }
 
-  @override
-  Map<String, dynamic>? toJson(AuthState state) {
-    if(state is AuthGranted){
-      return state.toMap();
-    }else{
-      return null;
+  FutureOr<void> _onAuthRegisterRequested(
+      AuthRegisterRequested event, Emitter<AuthState> emit) async {
+    final _currentUser = TaskUser(
+
+        /// expired is true to mimic an email validation that is required by the user in order to login
+        /// this prevents the user from logging in if they retstarted the app as it will dispatch [AuthInit]
+        /// it may be better to emit a new state just for registeration but for the sake of simplicit we will
+        /// let expired handle the logout and the registered state
+
+        email: event.email,
+        password: event.password,
+        expired: true);
+    final result = await _prefs.setString('currentUser', _currentUser.toJson());
+    if (result) {
+      emit(AuthGranted(taskUser: _currentUser));
+    } else {
+      emit(const AuthDenied(['Failed to register, please try again']));
+    }
+  }
+
+  FutureOr<void> _onResetPasswordRequested(
+      ResetPasswordRequested event, Emitter<AuthState> emit) async {
+    final result = _prefs.getString('currentUser');
+    if (result != null) {
+      final stored = TaskUser.fromJson(result);
+      if (stored.email == event.email) {
+        final updatedUser = stored.copyWith(password: event.password);
+        final result =
+            await _prefs.setString('currentUser', updatedUser.toJson());
+        if (result) {
+          emit(PasswordResetSuccess());
+        } else {
+          emit(
+              const AuthDenied(['Failed to reset password, please try again']));
+        }
+      } else {
+        emit(const AuthDenied(['Email does not match']));
+      }
+    } else {
+      emit(const AuthDenied(['User does not exist']));
     }
   }
 }

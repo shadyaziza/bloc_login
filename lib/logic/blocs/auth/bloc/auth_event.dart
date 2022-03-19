@@ -11,13 +11,27 @@ abstract class AuthEvent extends Equatable {
 class AuthInit extends AuthEvent {}
 
 class AuthLoginRequested extends AuthEvent {
-  const AuthLoginRequested(this.email, this.password, this.device);
+  const AuthLoginRequested(
+    this.email,
+    this.password,
+  );
   final String email;
   final String password;
-  final String device;
 
   @override
-  List<Object> get props => [email, password, device];
+  List<Object> get props => [email, password];
+}
+
+class AuthRegisterRequested extends AuthEvent {
+  const AuthRegisterRequested(
+    this.email,
+    this.password,
+  );
+  final String email;
+  final String password;
+
+  @override
+  List<Object> get props => [email, password];
 }
 
 class AuthRefreshRequested extends AuthEvent {
@@ -31,11 +45,8 @@ class AuthRefreshRequested extends AuthEvent {
 }
 
 class AuthLogoutRequested extends AuthEvent {
-  const AuthLogoutRequested(this.token);
-  final String token;
-
   @override
-  List<Object> get props => [token];
+  List<Object> get props => [];
 }
 
 class Authenticated extends AuthEvent {
@@ -44,5 +55,14 @@ class Authenticated extends AuthEvent {
   final User user;
 
   @override
-  List<Object> get props => [token, user != null];
+  List<Object> get props => [token, user];
+}
+
+class ResetPasswordRequested extends AuthEvent {
+  const ResetPasswordRequested(this.email, this.password);
+  final String email;
+  final String password;
+
+  @override
+  List<Object> get props => [email, password];
 }

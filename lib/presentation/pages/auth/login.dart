@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_login/logic/blocs/auth/bloc/auth_bloc.dart';
 import 'package:bloc_login/logic/blocs/auth/bloc/auth_state.dart';
 import 'package:bloc_login/logic/helpers/validator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -120,9 +120,7 @@ class _LoginState extends State<Login> {
                                             BorderSide(color: Colors.white70),
                                       ),
                                     ),
-                                    onChanged: (text) {
-                                      
-                                    },
+                                    onChanged: (text) {},
                                   ),
                                 ),
                                 const SizedBox(
@@ -169,9 +167,7 @@ class _LoginState extends State<Login> {
                                             BorderSide(color: Colors.white70),
                                       ),
                                     ),
-                                    onChanged: (text) {
-                                      
-                                    },
+                                    onChanged: (text) {},
                                   ),
                                 ),
                                 const SizedBox(
@@ -182,37 +178,37 @@ class _LoginState extends State<Login> {
                                       left: 40.0, right: 40),
                                   child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(
-                                            width * 0.65, height * 0.12),
+                                        minimumSize:
+                                            Size(width * 0.65, height * 0.12),
                                         side: const BorderSide(
                                             color: Colors.white, width: 1),
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(30)),
                                       ),
-                                      onPressed: (state is AuthLoading)? () => {null} :  () => {
-                                                if(validateForm()){
-                                                  BlocProvider.of<
-                                                            AuthBloc>(
-                                                        context)
-                                                    .add(
-                                                        AuthLoginRequested(
-                                                            emailController
-                                                                .text,
-                                                            pwdController.text,
-                                                            "BlocLogin"))
-                                                }
-                                              },
-                                      child: (state is AuthLoading)? const SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(color: Colors.white,)) : const Text(
-                                        'Login',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: 'UniNeue',
-                                            fontSize: 20),
-                                      )),
+                                      onPressed: () {
+                                        if (validateForm()) {
+                                          BlocProvider.of<AuthBloc>(context)
+                                              .add(AuthLoginRequested(
+                                            emailController.text,
+                                            pwdController.text,
+                                          ));
+                                        }
+                                      },
+                                      child: (state is AuthLoading)
+                                          ? const SizedBox(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                              ))
+                                          : const Text(
+                                              'Login',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'UniNeue',
+                                                  fontSize: 20),
+                                            )),
                                 ),
                                 const SizedBox(
                                   height: 30,

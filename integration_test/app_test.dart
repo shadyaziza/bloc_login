@@ -104,7 +104,7 @@ void main() {
       await tester.tap(find.byKey(kKeyLoginPublicLoginButton));
 
       /// make sure the app is settled
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 2));
 
       /// test the home screen
       expect(find.byKey(kKeyHomeScreenTitle), findsOneWidget);

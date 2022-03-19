@@ -1,3 +1,4 @@
+import 'package:bloc_login/data/constants/constant.dart';
 import 'package:bloc_login/logic/blocs/auth/bloc/auth_bloc.dart';
 import 'package:bloc_login/logic/blocs/auth/bloc/auth_state.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         //logout buttotn
         actions: [
           IconButton(
+            key: kKeyHomeScreenLogoutButton,
             icon: const Icon(Icons.exit_to_app),
             onPressed: () {
               context.read<AuthBloc>().add(AuthLogoutRequested());
@@ -33,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ],
         title: const Text(
           "Auric",
+          key: kKeyHomeScreenTitle,
           style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

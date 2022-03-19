@@ -22,3 +22,16 @@ const kKeyRegisterPublicConfirmPasswordField =
     Key('kRegisterConfirmPasswordField');
 const kKeyRegisterPublicRegisterButton = Key('kRegisterPublicRegisterButtotn');
 const kKeyRegisterPublicLoginButton = Key('kRegisterPublicLoginButton');
+const kKeyLoginPublicEmailField = Key('kLoginPublicEmailField');
+const kKeyLoginPublicPasswordField = Key('kLoginPublicPasswordField');
+const kKeyLoginPublicLoginButton = Key('kLoginPublicLoginButton');
+const kKeyLoginPublicForgotPasswordButton =
+    Key('kLoginPublicForgotPasswordButton');
+const kKeyForgotPasswordPublicEmailField =
+    Key('kForgotPasswordPublicEmailField');
+const kKeyForgotPasswordPublicPasswordField =
+    Key('kForgotPasswordPasswordField');
+const kKeyForgotPasswordPublicResetButton =
+    Key('kForgotPasswordPublicResetButton');
+const kKeyHomeScreenTitle = Key('kHomeScreenTitle');
+const kKeyHomeScreenLogoutButton = Key('kHomeScreenLogoutButton');

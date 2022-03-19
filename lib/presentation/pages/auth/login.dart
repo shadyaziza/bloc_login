@@ -1,3 +1,4 @@
+import 'package:bloc_login/data/constants/constant.dart';
 import 'package:bloc_login/logic/blocs/auth/bloc/auth_bloc.dart';
 import 'package:bloc_login/logic/blocs/auth/bloc/auth_state.dart';
 import 'package:bloc_login/logic/helpers/validator.dart';
@@ -94,6 +95,7 @@ class _LoginState extends State<Login> {
                                   padding: const EdgeInsets.only(
                                       left: 20.0, right: 40),
                                   child: TextFormField(
+                                    key: kKeyLoginPublicEmailField,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'UniNeue',
@@ -130,6 +132,7 @@ class _LoginState extends State<Login> {
                                   padding: const EdgeInsets.only(
                                       left: 20.0, right: 40),
                                   child: TextFormField(
+                                    key: kKeyLoginPublicPasswordField,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'UniNeue',
@@ -177,6 +180,7 @@ class _LoginState extends State<Login> {
                                   padding: const EdgeInsets.only(
                                       left: 40.0, right: 40),
                                   child: ElevatedButton(
+                                      key: kKeyLoginPublicLoginButton,
                                       style: ElevatedButton.styleFrom(
                                         minimumSize:
                                             Size(width * 0.65, height * 0.12),
@@ -215,6 +219,7 @@ class _LoginState extends State<Login> {
                                 ),
                                 Center(
                                   child: GestureDetector(
+                                    key: kKeyLoginPublicForgotPasswordButton,
                                     onTap: () {
                                       Navigator.of(context)
                                           .pushNamed('/forgot-password');

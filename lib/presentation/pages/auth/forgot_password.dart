@@ -1,3 +1,4 @@
+import 'package:bloc_login/data/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -114,6 +115,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 padding: const EdgeInsets.only(
                                     left: 20.0, right: 40),
                                 child: TextFormField(
+                                  key: kKeyForgotPasswordPublicEmailField,
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'UniNeue'),
@@ -150,6 +152,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 padding: const EdgeInsets.only(
                                     left: 20.0, right: 40),
                                 child: TextFormField(
+                                  key: kKeyForgotPasswordPublicPasswordField,
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'UniNeue',
@@ -192,6 +195,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 padding: const EdgeInsets.only(
                                     top: 50, left: 40.0, right: 40),
                                 child: ElevatedButton(
+                                    key: kKeyForgotPasswordPublicResetButton,
                                     style: ElevatedButton.styleFrom(
                                       minimumSize:
                                           Size(width * 0.65, height * 0.12),
